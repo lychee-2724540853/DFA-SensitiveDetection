@@ -22,7 +22,8 @@ public class baseWordsDetector implements WordsDetector {
         char temp;
         Map useMap = sensitiveMap;
         Map pre = useMap;
-
+        StringBuilder sensitiveWord = new StringBuilder();  //检测到的词
+        
         for (int i=0;i<text.length();i++)
         {
             temp = text.charAt(i);
@@ -31,16 +32,23 @@ public class baseWordsDetector implements WordsDetector {
             if(map==null) {
                 if(useMap.get(temp)==null) {
                     pre = useMap;
-                    continue;
+                    sensitiveWord.delete(0, sensitiveWord.length());
+                    continue;  //如果输出敏感词，把这里注释掉
                 }
-                else
+                else {
                     pre = (HashMap) useMap.get(temp);
+                    sensitiveWord.delete(0, sensitiveWord.length());
+                    sensitiveWord.append(temp);
+                }
             }
             else if ("1".equals(map.get("isEnd"))) {
+                sensitiveWord.append(temp);
                 return true;
             }
-            else
+            else {
                 pre = map;
+                sensitiveWord.append(temp);
+            }
         }
         return false;
     }
